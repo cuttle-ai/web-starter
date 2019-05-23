@@ -51,7 +51,7 @@ func main() {
 	}()
 
 	//listening for syscalls
-	var gracefulStop = make(chan os.Signal)
+	var gracefulStop = make(chan os.Signal, 1)
 	signal.Notify(gracefulStop, os.Interrupt)
 	sig := <-gracefulStop
 
