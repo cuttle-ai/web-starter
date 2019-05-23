@@ -8,6 +8,9 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/cuttle-ai/web-starter/boilerplate/log"
+	"github.com/cuttle-ai/web-starter/boilerplate/routes/response"
+
 	"github.com/cuttle-ai/web-starter/version"
 
 	"github.com/cuttle-ai/web-starter/boilerplate/config"
@@ -50,7 +53,15 @@ func (r Route) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	 * Execute request handler func
 	 */
 	ctx := req.Context()
-	req.ParseForm()
+	err := req.ParseForm()
+	if err != nil {
+		//error while parsing the form
+		log.Error("Error while parsing the request form", err)
+		response.WriteError(res, response.Error{Err: "Couldn't parse the request form"})
+		_, cancel := context.WithCancel(ctx)
+		cancel()
+		return
+	}
 	r.Exec(ctx, res, req)
 }
 

@@ -37,7 +37,7 @@ func init() {
 
 	//response timeout
 	if len(os.Getenv("RESPONSE_TIMEOUT")) != 0 {
-		//if sucessfull convert timeout
+		//if successful convert timeout
 		if t, err := strconv.ParseInt(os.Getenv("RESPONSE_TIMEOUT"), 10, 64); err == nil {
 			ResponseTimeout = time.Duration(t * int64(time.Millisecond))
 		}
@@ -45,7 +45,7 @@ func init() {
 
 	//request body read timeout
 	if len(os.Getenv("REQUEST_BODY_READ_TIMEOUT")) != 0 {
-		//if sucessfull convert timeout
+		//if successful convert timeout
 		if t, err := strconv.ParseInt(os.Getenv("REQUEST_BODY_READ_TIMEOUT"), 10, 64); err == nil {
 			RequestRTimeout = time.Duration(t * int64(time.Millisecond))
 		}
@@ -53,7 +53,7 @@ func init() {
 
 	//response write
 	if len(os.Getenv("RESPOSE_WRITE_TIMEOUT")) != 0 {
-		//if sucessfull convert timeout
+		//if successful convert timeout
 		if t, err := strconv.ParseInt(os.Getenv("RESPOSE_WRITE_TIMEOUT"), 10, 64); err == nil {
 			ResponseWTimeout = time.Duration(t * int64(time.Millisecond))
 		}
@@ -72,7 +72,7 @@ func init() {
 	 */
 	//Production
 	if len(os.Getenv("PRODUCTION")) != 0 {
-		//if sucessfull convert production
+		//if successful convert production
 		if t, err := strconv.Atoi(os.Getenv("PRODUCTION")); err == nil && (t == 1 || t == 0) {
 			PRODUCTION = t
 		}

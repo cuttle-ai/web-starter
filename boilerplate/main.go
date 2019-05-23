@@ -27,7 +27,7 @@ func main() {
 	 * Init the routes
 	 * Now listen and serve
 	 * Listen to the os signals for exit
-	 * Gracefull exit when command comes
+	 * Graceful exit when command comes
 	 */
 	//creating a new server mux
 	m := http.NewServeMux()
@@ -58,5 +58,8 @@ func main() {
 	//gracefulling exiting when request comes in
 	log.Info("Received the interrupt", sig)
 	log.Info("Shutting down the server")
-	s.Shutdown(context.Background())
+	err := s.Shutdown(context.Background())
+	if err != nil {
+		log.Error("Couldn't end the server gracefully")
+	}
 }

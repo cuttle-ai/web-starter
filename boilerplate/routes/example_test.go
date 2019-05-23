@@ -52,7 +52,10 @@ func ExampleInitRoutes() {
 	//gracefulling exiting when request comes in
 	log.Info("Received the interrupt", sig)
 	log.Info("Shutting down the server")
-	s.Shutdown(context.Background())
+	err := s.Shutdown(context.Background())
+	if err != nil {
+		log.Error("Couldn't end the server gracefully")
+	}
 }
 
 func ExampleAddRoutes() {
