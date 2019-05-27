@@ -11,7 +11,7 @@ import (
 	"github.com/cuttle-ai/web-starter/boilerplate/log"
 	"github.com/cuttle-ai/web-starter/boilerplate/routes/response"
 
-	"github.com/cuttle-ai/web-starter/version"
+	"github.com/cuttle-ai/web-starter/boilerplate/version"
 
 	"github.com/cuttle-ai/web-starter/boilerplate/config"
 )
