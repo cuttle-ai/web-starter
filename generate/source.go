@@ -34,8 +34,8 @@ func (s *Source) Name() string {
 
 //Generate will generate a source file in the given destination path.
 //It will copy the source file and makes the required refactors in the
-//newly created desitnation file.
-//The required desitnation directory has to be provided as argument. The file name will
+//newly created destination file.
+//The required destination directory has to be provided as argument. The file name will
 //be same as the source. If the file name also has to be changed, it has to be specified under the
 //refactor list.
 func (s *Source) Generate(dst string) error {
@@ -56,7 +56,7 @@ func (s *Source) Generate(dst string) error {
 	for _, v := range s.Refactors {
 		err = v.Do(d)
 		if err != nil {
-			fmt.Println("Error while making the refactor", v.String(), "in the desitnation file for", d)
+			fmt.Println("Error while making the refactor", v.String(), "in the destination file for", d)
 			return err
 		}
 	}
@@ -65,7 +65,7 @@ func (s *Source) Generate(dst string) error {
 
 //Copy copies a source file to a given destination. The destination shouldn't have the
 //destination file name. It should only contain the absolute path to the destination directory.
-//If any error occurs while copying, like unsucessful copying of the file, or unsucessfull creation of the
+//If any error occurs while copying, like unsuccessful copying of the file, or unsuccessfull creation of the
 //destination directory, it will be reported back. It will also return the absolute path to the destination file.
 func (s *Source) Copy(dst string) (string, error) {
 	/*
@@ -73,7 +73,7 @@ func (s *Source) Copy(dst string) (string, error) {
 	 * Checking whether the file is a regular file itself
 	 * Create the directories in destination if not existing
 	 * Identify the destination file name
-	 * Copy the file to the desitnation
+	 * Copy the file to the destination
 	 */
 	//checking whether the source file exists and is a regular file
 	sourceFileStat, err := os.Stat(s.Name())
@@ -100,7 +100,7 @@ func (s *Source) Copy(dst string) (string, error) {
 	//identifying the destination filename
 	dstF := dst + string([]rune{filepath.Separator}) + s.FileName
 
-	//copying the source file to the desitnation
+	//copying the source file to the destination
 	source, err := os.Open(s.Name())
 	if err != nil {
 		//error while opening the source
