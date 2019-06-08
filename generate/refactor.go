@@ -74,12 +74,12 @@ func (r Refactor) Do(file string) error {
 		reg := regexp.MustCompile(r.Find)
 		count := r.occurrences
 		//if the count is < 1 then the count is infinite
-		//if the count is > 1 find the occurence till count < 1
+		//if the count is > 1 find the occurrence till count < 1
 		if count < 1 {
 			err := r.Source.SetSrc(file, reg.ReplaceAllString(source, r.Replace))
 			if err != nil {
 				//error while setting refactored string
-				fmt.Println("Error while replacing the occurence refactoring", r.Name, file, r.Find, "->", r.Replace)
+				fmt.Println("Error while replacing the occurrence refactoring", r.Name, file, r.Find, "->", r.Replace)
 				return err
 			}
 			return nil
@@ -93,7 +93,7 @@ func (r Refactor) Do(file string) error {
 		}))
 		if err != nil {
 			//error while setting refactored string
-			fmt.Println("Error while replacing the occurence refactoring", r.Name, file, r.Find, "->", r.Replace)
+			fmt.Println("Error while replacing the occurrence refactoring", r.Name, file, r.Find, "->", r.Replace)
 			return err
 		}
 		return nil
@@ -105,7 +105,7 @@ func (r Refactor) Do(file string) error {
 		err := r.Source.SetSrc(file, strings.Replace(source, r.Find, r.Replace, -1))
 		if err != nil {
 			//error while setting refactored string
-			fmt.Println("Error while replacing the occurence refactoring", r.Name, file, r.Find, "->", r.Replace)
+			fmt.Println("Error while replacing the occurrence refactoring", r.Name, file, r.Find, "->", r.Replace)
 			return err
 		}
 		return nil
@@ -114,7 +114,7 @@ func (r Refactor) Do(file string) error {
 	err = r.Source.SetSrc(file, strings.Replace(source, r.Find, r.Replace, r.occurrences))
 	if err != nil {
 		//error while setting refactored string
-		fmt.Println("Error while replacing the occurence refactoring", r.Name, file, r.Find, "->", r.Replace)
+		fmt.Println("Error while replacing the occurrence refactoring", r.Name, file, r.Find, "->", r.Replace)
 		return err
 	}
 

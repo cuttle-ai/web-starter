@@ -65,7 +65,7 @@ func (s *Source) Generate(dst string) error {
 
 //Copy copies a source file to a given destination. The destination shouldn't have the
 //destination file name. It should only contain the absolute path to the destination directory.
-//If any error occurs while copying, like unsuccessful copying of the file, or unsuccessfull creation of the
+//If any error occurs while copying, like unsuccessful copying of the file, or unsuccessful creation of the
 //destination directory, it will be reported back. It will also return the absolute path to the destination file.
 func (s *Source) Copy(dst string) (string, error) {
 	/*
