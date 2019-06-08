@@ -52,24 +52,11 @@ func (s *Source) Generate(dst string) error {
 		return err
 	}
 
-	//opening the destination file
-	s.File, err = os.Open(d)
-	if err != nil {
-		//error while opening the destination file
-		fmt.Println("Error while opening the destination file", d)
-		return err
-	}
-	defer func(f *os.File) {
-		if f != nil {
-			f.Close()
-		}
-	}(s.File)
-
 	//will iterate through the refactors and do them
 	for _, v := range s.Refactors {
-		err = v.Do(s.File)
+		err = v.Do(d)
 		if err != nil {
-			fmt.Println("Error while making the refactor", v.String(), "in the desitnation file for", s.Name())
+			fmt.Println("Error while making the refactor", v.String(), "in the desitnation file for", d)
 			return err
 		}
 	}
@@ -136,5 +123,5 @@ func (s *Source) Copy(dst string) (string, error) {
 		return "", err
 	}
 
-	return "", nil
+	return dstF, nil
 }
