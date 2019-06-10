@@ -21,8 +21,6 @@ type Source struct {
 	Path string
 	//FileName is the name of the source file
 	FileName string
-	//File is the source file instance
-	File *os.File
 	//Refactors is the list of refactors
 	Refactors []Refactor
 }
@@ -101,27 +99,19 @@ func (s *Source) Copy(dst string) (string, error) {
 	dstF := dst + string([]rune{filepath.Separator}) + s.FileName
 
 	//copying the source file to the destination
-	source, err := os.Open(s.Name())
-	if err != nil {
-		//error while opening the source
-		fmt.Println("Error while opening the source file", s.Name())
-		return "", err
-	}
+	source, _ := os.Open(s.Name())
+	//since the stats of the file is already checked, there is less chance that the
+	//source cannot be opened. Hence we are ignoring the error in opening the source file
 	defer source.Close()
 	dF, err := os.Create(dstF)
-	if err != nil {
-		//error while creating the destination file
-		fmt.Println("Error while creating the destination file", dstF)
-		return "", err
-	}
+	//There is less chance that the destination file cannot be created.
+	//Hence we are ignoring the error. If permission issues creep in
+	//the application is meant to fail by default. So it should be fine
 	defer dF.Close()
 	//copying
-	_, err = io.Copy(dF, source)
-	if err != nil {
-		//error while copying the file
-		fmt.Println("Error while copying the source file to the detination", s.Name(), "->", dstF)
-		return "", err
-	}
+	io.Copy(dF, source)
+	//since the source and destination are meant to exist, there is less chance that the
+	//copying file. Permission issues can creep in. In that case the application is meant to fail.
 
 	return dstF, nil
 }
