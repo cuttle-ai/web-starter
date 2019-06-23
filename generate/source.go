@@ -103,7 +103,7 @@ func (s *Source) Copy(dst string) (string, error) {
 	//since the stats of the file is already checked, there is less chance that the
 	//source cannot be opened. Hence we are ignoring the error in opening the source file
 	defer source.Close()
-	dF, err := os.Create(dstF)
+	dF, _ := os.Create(dstF)
 	//There is less chance that the destination file cannot be created.
 	//Hence we are ignoring the error. If permission issues creep in
 	//the application is meant to fail by default. So it should be fine

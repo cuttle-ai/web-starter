@@ -23,9 +23,9 @@ type Refactor struct {
 	Find string
 	//Replace is the string to be replaced in the place of the string to be found
 	Replace string
-	//occurrences is max the no. of occurrences to be replaced. If the occurrences is < 1,
+	//Occurrences is max the no. of occurrences to be replaced. If the occurrences is < 1,
 	//then it is considered as infinite
-	occurrences int
+	Occurrences int
 	//IsRegex indicates that the string to be found is a regular expression
 	IsRegex bool
 	//Source is the source to be refactored
@@ -72,7 +72,7 @@ func (r Refactor) Do(file string) error {
 	//handling the regex type of refactoring
 	if r.IsRegex {
 		reg := regexp.MustCompile(r.Find)
-		count := r.occurrences
+		count := r.Occurrences
 		//if the count is < 1 then the count is infinite
 		//if the count is > 1 find the occurrence till count < 1
 		if count < 1 {
@@ -100,7 +100,7 @@ func (r Refactor) Do(file string) error {
 	}
 
 	//handling simple string replacement
-	if r.occurrences < 1 {
+	if r.Occurrences < 1 {
 		//if the count is < 1 then replace everything
 		err := r.Source.SetSrc(file, strings.Replace(source, r.Find, r.Replace, -1))
 		if err != nil {
@@ -111,7 +111,7 @@ func (r Refactor) Do(file string) error {
 		return nil
 	}
 	//in normal cases just replace the occurrences
-	err = r.Source.SetSrc(file, strings.Replace(source, r.Find, r.Replace, r.occurrences))
+	err = r.Source.SetSrc(file, strings.Replace(source, r.Find, r.Replace, r.Occurrences))
 	if err != nil {
 		//error while setting refactored string
 		fmt.Println("Error while replacing the occurrence refactoring", r.Name, file, r.Find, "->", r.Replace)

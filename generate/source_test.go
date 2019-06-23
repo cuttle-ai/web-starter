@@ -133,11 +133,9 @@ var sourcetcs = []struct {
 			Refactors: []generate.Refactor{},
 		},
 		testdataDir + string([]rune{filepath.Separator}) + "main.go",
-		&os.PathError{Op: "mkdir", Path: testdataDir + string([]rune{filepath.Separator}) + "main.go", Err: syscall.ENOTDIR},
-		func() {
-		},
-		func() {
-		},
+		&os.PathError{"mkdir", testdataDir + string([]rune{filepath.Separator}) + "main.go", syscall.ENOTDIR},
+		func() {},
+		func() {},
 		func() (string, bool) {
 			return "", true
 		},
