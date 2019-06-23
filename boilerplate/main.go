@@ -46,7 +46,7 @@ func main() {
 
 	//listen and serve to the server
 	go func() {
-		log.Info("Starting the User Subscription server at :" + config.Port)
+		log.Info("Starting the server at :" + config.Port)
 		log.Error(s.ListenAndServe())
 	}()
 
