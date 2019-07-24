@@ -21,6 +21,8 @@ type Source struct {
 	Path string
 	//FileName is the name of the source file
 	FileName string
+	//RelativeDestination is the relative path in the destination to put the refactored file
+	RelativeDestination string
 	//Refactors is the list of refactors
 	Refactors []Refactor
 }
@@ -61,6 +63,8 @@ func (s *Source) Generate(dst string) error {
 	return nil
 }
 
+var separator = string([]rune{filepath.Separator})
+
 //Copy copies a source file to a given destination. The destination shouldn't have the
 //destination file name. It should only contain the absolute path to the destination directory.
 //If any error occurs while copying, like unsuccessful copying of the file, or unsuccessful creation of the
@@ -88,7 +92,11 @@ func (s *Source) Copy(dst string) (string, error) {
 	}
 
 	//creating the destination directory if not existing
-	err = os.MkdirAll(dst, 0775)
+	newD := dst
+	if len(s.RelativeDestination) > 0 {
+		newD = dst + separator + s.RelativeDestination
+	}
+	err = os.MkdirAll(newD, 0775)
 	if err != nil {
 		//error while creating the destination directories
 		fmt.Println("Error while creating the destination directories", dst)
@@ -96,7 +104,7 @@ func (s *Source) Copy(dst string) (string, error) {
 	}
 
 	//identifying the destination filename
-	dstF := dst + string([]rune{filepath.Separator}) + s.FileName
+	dstF := newD + separator + s.FileName
 
 	//copying the source file to the destination
 	source, _ := os.Open(s.Name())
@@ -109,7 +117,12 @@ func (s *Source) Copy(dst string) (string, error) {
 	//the application is meant to fail by default. So it should be fine
 	defer dF.Close()
 	//copying
-	io.Copy(dF, source)
+	_, err = io.Copy(dF, source)
+	if err != nil {
+		//error while copying the destination file
+		fmt.Println("Error while creating the destination file", dF)
+		return "", err
+	}
 	//since the source and destination are meant to exist, there is less chance that the
 	//copying file. Permission issues can creep in. In that case the application is meant to fail.
 

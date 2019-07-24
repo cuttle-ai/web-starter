@@ -112,7 +112,10 @@ var sourcetcs = []struct {
 		testdataDir + string([]rune{filepath.Separator}) + "copied",
 		errors.New("copied is not a regular file"),
 		func() {
-			os.Mkdir(testdataDir+string([]rune{filepath.Separator})+"copied", 0755)
+			err := os.Mkdir(testdataDir+string([]rune{filepath.Separator})+"copied", 0755)
+			if err != nil {
+				fmt.Println("Error while making the directory", testdataDir+string([]rune{filepath.Separator})+"copied", err)
+			}
 		},
 		func() {
 			os.RemoveAll(testdataDir + string([]rune{filepath.Separator}) + "copied")
@@ -133,7 +136,7 @@ var sourcetcs = []struct {
 			Refactors: []generate.Refactor{},
 		},
 		testdataDir + string([]rune{filepath.Separator}) + "main.go",
-		&os.PathError{"mkdir", testdataDir + string([]rune{filepath.Separator}) + "main.go", syscall.ENOTDIR},
+		&os.PathError{Op: "mkdir", Path: testdataDir + string([]rune{filepath.Separator}) + "main.go", Err: syscall.ENOTDIR},
 		func() {},
 		func() {},
 		func() (string, bool) {

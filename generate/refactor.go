@@ -23,9 +23,6 @@ type Refactor struct {
 	Find string
 	//Replace is the string to be replaced in the place of the string to be found
 	Replace string
-	//Occurrences is max the no. of occurrences to be replaced. If the occurrences is < 1,
-	//then it is considered as infinite
-	Occurrences int
 	//IsRegex indicates that the string to be found is a regular expression
 	IsRegex bool
 	//Source is the source to be refactored
@@ -34,14 +31,12 @@ type Refactor struct {
 
 //RefactorSource has to be implmented by any source to act as an source code to be refactored
 type RefactorSource interface {
-	//Src returns the source code to be refactored.
+	//Initiate will read the given file and initiate the refactoring. Through the returned output
+	//channel the code to be refactored will be streamed and through the in channel it will replace the code with the refactored one.
+	//During processing of each source code stream, if any error occurs it will be pushed to the error channel. Else nil will be pushed to it.
 	//The absolute path to the file from the refactor source code string has to be recovered
 	//This method also returns the error if any else nil is returned
-	Src(file string) (string, error)
-	//SetSrc will set the refactored code to the source.
-	//The source file should have the absolute path to the file.
-	//Error returned will be nil if no error happens.
-	SetSrc(file, code string) error
+	Initiate(file string, in chan string) (chan string, chan error, error)
 }
 
 //Do will make the necessary changes in the given file as per the reafctor
@@ -50,6 +45,7 @@ type RefactorSource interface {
 func (r Refactor) Do(file string) error {
 	/*
 	 * Will check whether the refactor source is nil or not
+	 * Will initiate the refactor source
 	 * Will get the source code to be refactored
 	 * If the refactor is a regex based one, will handle in accordance
 	 * Else simple string find and replace will be done
@@ -61,64 +57,42 @@ func (r Refactor) Do(file string) error {
 		return errors.New("the refactor source is nil. Not refactoring " + r.Name)
 	}
 
-	//getting the source code to be refactored
-	source, err := r.Source.Src(file)
+	//initiating the source
+	in := make(chan string)
+	out, errChan, err := r.Source.Initiate(file, in)
 	if err != nil {
-		//error while getting the source from the file
-		fmt.Println("Error while getting the source code from the file", file)
+		//error while initiating the source for the file
+		fmt.Println("Error while initiating the source for the file", file)
 		return err
 	}
 
-	//handling the regex type of refactoring
-	if r.IsRegex {
-		reg := regexp.MustCompile(r.Find)
-		count := r.Occurrences
-		//if the count is < 1 then the count is infinite
-		//if the count is > 1 find the occurrence till count < 1
-		if count < 1 {
-			err := r.Source.SetSrc(file, reg.ReplaceAllString(source, r.Replace))
+	for source := range in {
+		//handling the regex type of refactoring
+		if r.IsRegex {
+			reg := regexp.MustCompile(r.Find)
+			//if the count is < 1 then the count is infinite
+			//if the count is > 1 find the occurrence till count < 1
+			out <- reg.ReplaceAllString(source, r.Replace)
+			err := <-errChan
 			if err != nil {
 				//error while setting refactored string
 				fmt.Println("Error while replacing the occurrence refactoring", r.Name, file, r.Find, "->", r.Replace)
 				return err
 			}
-			return nil
+			continue
 		}
-		err := r.Source.SetSrc(file, reg.ReplaceAllStringFunc(source, func(s string) string {
-			if count < 1 {
-				return s
-			}
-			count--
-			return r.Replace
-		}))
+
+		//handling simple string replacement
+		out <- strings.Replace(source, r.Find, r.Replace, -1)
+		err := <-errChan
 		if err != nil {
 			//error while setting refactored string
 			fmt.Println("Error while replacing the occurrence refactoring", r.Name, file, r.Find, "->", r.Replace)
 			return err
 		}
-		return nil
 	}
-
-	//handling simple string replacement
-	if r.Occurrences < 1 {
-		//if the count is < 1 then replace everything
-		err := r.Source.SetSrc(file, strings.Replace(source, r.Find, r.Replace, -1))
-		if err != nil {
-			//error while setting refactored string
-			fmt.Println("Error while replacing the occurrence refactoring", r.Name, file, r.Find, "->", r.Replace)
-			return err
-		}
-		return nil
-	}
-	//in normal cases just replace the occurrences
-	err = r.Source.SetSrc(file, strings.Replace(source, r.Find, r.Replace, r.Occurrences))
-	if err != nil {
-		//error while setting refactored string
-		fmt.Println("Error while replacing the occurrence refactoring", r.Name, file, r.Find, "->", r.Replace)
-		return err
-	}
-
-	return nil
+	err = <-errChan
+	return err
 }
 
 //String is the stringer implementation of the Refactor
