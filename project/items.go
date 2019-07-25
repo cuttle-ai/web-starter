@@ -80,6 +80,42 @@ func (p *Project) InitSources() {
 			},
 		},
 		{
+			Path:     BoilerplatePath,
+			FileName: "README.md",
+			Refactors: []generate.Refactor{
+				{
+					Name:    README_PROJECT_NAME,
+					Find:    PROJECT_NAME,
+					Replace: p.Name,
+					Source:  generate.NewNonGoFileRefactor(),
+				},
+				{
+					Name:    README_PROJECT_DESCRIPTION,
+					Find:    PROJECT_DESCRIPTION,
+					Replace: p.Description,
+					Source:  generate.NewNonGoFileRefactor(),
+				},
+				{
+					Name:    README_PACKAGE,
+					Find:    PACKAGE,
+					Replace: p.Package,
+					Source:  generate.NewNonGoFileRefactor(),
+				},
+				{
+					Name:    README_AUTHOR_NAME,
+					Find:    AUTHOR_NAME,
+					Replace: p.Author.Name,
+					Source:  generate.NewNonGoFileRefactor(),
+				},
+				{
+					Name:    README_AUTHOR_EMAIL,
+					Find:    AUTHOR_EMAIL,
+					Replace: p.Author.Email,
+					Source:  generate.NewNonGoFileRefactor(),
+				},
+			},
+		},
+		{
 			Path:                VersionPath,
 			FileName:            "version.go",
 			RelativeDestination: "version",

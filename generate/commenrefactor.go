@@ -21,7 +21,6 @@ import (
 type CommentRefactor struct{}
 
 //NewCommentRefactor is the constructor for the comment refactor
-//Default value of the separator is |
 func NewCommentRefactor() CommentRefactor {
 	return CommentRefactor{}
 }
@@ -35,7 +34,7 @@ func (p CommentRefactor) Initiate(file string, out chan string) (chan string, ch
 	/*
 	 * We will create an input channel, error channel
 	 * We will parse the comments of the source file
-	 * Will initiate a go routine that processes the imports and send it to the out channel
+	 * Will initiate a go routine that processes the comment and send it to the out channel
 	 */
 	//fileset to trcak the source code positions
 	fset := token.NewFileSet()

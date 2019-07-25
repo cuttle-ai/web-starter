@@ -34,9 +34,9 @@ func (e errorRefactor) Initiate(file string, out chan string) (chan string, chan
 	return in, erCh, nil
 }
 
-func commonValidTest(checkOld, checkNew bool, oldStr, newStr string, source generate.RefactorSource) (string, bool) {
+func commonValidTest(file string, checkOld, checkNew bool, oldStr, newStr string, source generate.RefactorSource) (string, bool) {
 	out := make(chan string)
-	in, erCh, err := source.Initiate(testdataDir+string([]rune{filepath.Separator})+"main_copy.go", out)
+	in, erCh, err := source.Initiate(testdataDir+string([]rune{filepath.Separator})+file, out)
 	if err != nil {
 		//error while opening the main_copy.go file to validate
 		fmt.Println("Error while reading the source of testdata/main_copy.go")
@@ -117,7 +117,7 @@ var refactortcs = []struct {
 			}
 		},
 		func() (string, bool) {
-			return commonValidTest(true, false, "cuttle-ai/web-starter", "melvinodsa/test", generate.NewPackageRefactor())
+			return commonValidTest("main_copy.go", true, false, "cuttle-ai/web-starter", "melvinodsa/test", generate.NewPackageRefactor())
 		},
 	},
 	{
@@ -161,7 +161,51 @@ var refactortcs = []struct {
 			}
 		},
 		func() (string, bool) {
-			return commonValidTest(true, false, "{{.Name}}", "New Name", generate.NewCommentRefactor())
+			return commonValidTest("main_copy.go", true, false, "{{.Name}}", "New Name", generate.NewCommentRefactor())
+		},
+	},
+	{
+		"Normal non-go file refactor test",
+		testdataDir + string([]rune{filepath.Separator}) + "README_copy.md",
+		generate.Refactor{
+			Name:    "project name refactor",
+			Find:    "{{.Name}}",
+			Replace: "New Name",
+			Source:  generate.NewNonGoFileRefactor(),
+		},
+		nil,
+		func() {
+			s, err := os.Open(testdataDir + string([]rune{filepath.Separator}) + "README.md")
+			if err != nil {
+				//error while opeing the README.md test data file
+				fmt.Println("Error while opening the testdata/README.md file", err.Error())
+				return
+			}
+			defer s.Close()
+			d, err := os.Create(testdataDir + string([]rune{filepath.Separator}) + "README_copy.md")
+			if err != nil {
+				//error while creating the copy file of readme
+				fmt.Println("Error while creating the testdata/README_copy.md", err.Error())
+				return
+			}
+			defer d.Close()
+			_, err = io.Copy(d, s)
+			if err != nil {
+				//error while copying the main to README_copy
+				fmt.Println("Error while copying from testdata/README.md to testdata/README_copy.md", err.Error())
+				return
+			}
+		},
+		func() {
+			err := os.Remove(testdataDir + string([]rune{filepath.Separator}) + "README_copy.md")
+			if err != nil {
+				//error while removing the copy of README.md
+				fmt.Println("Error while removing the testdata/README_copy.md", err.Error())
+				return
+			}
+		},
+		func() (string, bool) {
+			return commonValidTest("README_copy.md", true, false, "{{.Name}}", "New Name", generate.NewNonGoFileRefactor())
 		},
 	},
 	{
@@ -205,7 +249,7 @@ var refactortcs = []struct {
 			}
 		},
 		func() (string, bool) {
-			return commonValidTest(true, false, "cuttle-ai/web-starter", "melvinodsa/test", generate.NewPackageRefactor())
+			return commonValidTest("main_copy.go", true, false, "cuttle-ai/web-starter", "melvinodsa/test", generate.NewPackageRefactor())
 		},
 	},
 	{
@@ -250,7 +294,7 @@ var refactortcs = []struct {
 			}
 		},
 		func() (string, bool) {
-			return commonValidTest(true, false, "cuttle-ai/web-starter", "melvinodsa/test", generate.NewPackageRefactor())
+			return commonValidTest("main_copy.go", true, false, "cuttle-ai/web-starter", "melvinodsa/test", generate.NewPackageRefactor())
 		},
 	},
 	{
@@ -295,7 +339,7 @@ var refactortcs = []struct {
 			}
 		},
 		func() (string, bool) {
-			return commonValidTest(true, false, "cuttle-ai/web-starter", "melvinodsa/test", generate.NewPackageRefactor())
+			return commonValidTest("main_copy.go", true, false, "cuttle-ai/web-starter", "melvinodsa/test", generate.NewPackageRefactor())
 		},
 	},
 	{
