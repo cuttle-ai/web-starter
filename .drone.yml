@@ -5,5 +5,5 @@ steps:
 - name: build and test
   image: golang
   commands:
-  - go build ./...
-  - go test ./...
+  - cd boilerplate && go build
+  - cd ../generate && go build && go test
