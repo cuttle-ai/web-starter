@@ -19,6 +19,14 @@ const (
 	AUTHOR_EMAIL = "{{.Author.Email}}"
 	//PACKAGE denotes the string to be replaced by the package in the boilerplate code
 	PACKAGE = "{{.Package}}"
+	//CUTTLE_AI denotes the string to be replaced by the author across the lICENSE information in all files
+	CUTTLE_AI = "Cuttle.ai"
+	//MIT_STYLE denotes the string to be replaced by the LICENSE Template
+	MIT_STYLE = "MIT-style"
+	//YEAR denotes the string to be replaced by the year in LICENSE files
+	YEAR = "{{.Year}}"
+	//ORGANISATION denotes the string to be replaced by the orgianisation in LICENSE files
+	ORGANISATION = "{{.Organisation}}"
 )
 
 const (
@@ -34,8 +42,16 @@ const (
 	README_PROJECT_DESCRIPTION = "README project description"
 	//README_PACKAGE is the refactor package for the package in README.md file
 	README_PACKAGE = "README package"
-	//README_AUTHOR_NAME is the refactor author name for the author name in README.md file
+	//README_AUTHOR_NAME is the refactor for author name for the author name in README.md file
 	README_AUTHOR_NAME = "README author name"
-	//README_AUTHOR_EMAIL is the refactor author email for the author email in README.md file
+	//README_AUTHOR_EMAIL is the refactor for author email for the author email in README.md file
 	README_AUTHOR_EMAIL = "README project email"
+	//LICENSE_ORGANISATION is the refactor for organisation in the license files and license disclaimer in all the files
+	LICENSE_ORGANISATION = "LICENSE organisation"
+	//LICENSE_TYPE is the refactor for LICENSE type like MIT-style, closed etc.
+	LICENSE_TYPE = "LICENSE template"
+	//LICENSE_YEAR is the refactor for year in the license file
+	LICENSE_YEAR = "LICENSE year"
+	//LICENSE_PROJECT_NAME is the refactor for project name in the license file
+	LICENSE_PROJECT_NAME = "LICENSE project name"
 )

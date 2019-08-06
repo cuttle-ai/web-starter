@@ -17,6 +17,38 @@ import (
  * setting up the boilerplat project
  */
 
+//Licesetype is the type of license
+type LicenseType string
+
+const (
+	//AGPL3 type license
+	AGPL3 LicenseType = "AGPL-3"
+	//BSD2 type license
+	BSD2 LicenseType = "BSD-2"
+	//BSD3 type license
+	BSD3 LicenseType = "BSD-3"
+	//CLOSED type license
+	CLOSED LicenseType = "CLOSED"
+	//GPL2 type license
+	GPL2 LicenseType = "GPL-2"
+	//GPL3 type license
+	GPL3 LicenseType = "GPL-3"
+	//MIT type license
+	MIT LicenseType = "MIT"
+	//UNLICENSED type license
+	UNLICENSED LicenseType = "UNLICENSED"
+)
+
+//License gives info about the license
+type License struct {
+	//Type is the type of license
+	Type LicenseType
+	//Year of the license validity
+	Year string
+	//Organisation that issed the license
+	Organisation string
+}
+
 type Project struct {
 	//Name of the project
 	Name string
@@ -30,6 +62,8 @@ type Project struct {
 	Package string
 	//Sources is the list of sources with refactors in the boilerplate code
 	Sources []generate.Source
+	//License is the license to be provided for the project
+	License License
 }
 
 //Author refers to the initial project author
