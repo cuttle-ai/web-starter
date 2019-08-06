@@ -10,4 +10,4 @@ steps:
   commands:
   - go get github.com/cuttle-ai/web-starter && cd $GOPATH/src/github.com/cuttle-ai/web-starter && go get ./... && go get github.com/schrej/godacov && go get -u github.com/haya14busa/goverage
   - go build ./...
-  - go test -coverprofile=coverage.out ./... godacov -t $COVERAGE_TOKEN -r ./coverage.out -c $DRONE_COMMIT_SHA
+  - go test -coverprofile=coverage.out ./... && godacov -t $COVERAGE_TOKEN -r ./coverage.out -c $DRONE_COMMIT_SHA
