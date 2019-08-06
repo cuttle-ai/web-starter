@@ -1,17 +1,16 @@
 kind: pipeline
 name: default
 
-workspace:
-  base: /go
-  path: github.com/cuttle-ai/web-starter
-
 steps:
 - name: build and test
   image: golang
-  environment:
-    COVERAGE_TOKEN:
-      from_secret: codacy-api-token
   commands:
-  - go get ./... && go get github.com/schrej/godacov
+  - go get github.com/cuttle-ai/web-starter && cd $GOPATH/src/github.com/cuttle-ai/web-starter && go get ./... && go get github.com/schrej/godacov && export PAT
   - go build ./...
-  - go test -coverprofile=coverage.out ./... && $GOPATH/bin/godacov -t $COVERAGE_TOKEN -r ./coverage.out -c $DRONE_COMMIT_SHA
+  - go test -coverprofile=coverage.out ./...
+
+- name: codacy
+  image: plugins/codacy
+  settings:
+    token:
+      from_secret: codacy-api-token
