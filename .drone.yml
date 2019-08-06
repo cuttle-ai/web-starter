@@ -8,6 +8,6 @@ steps:
     COVERAGE_TOKEN:
       from_secret: codacy-api-token
   commands:
-  - go get github.com/cuttle-ai/web-starter && cd $GOPATH/src/github.com/cuttle-ai/web-starter && go get ./... && go get github.com/schrej/godacov && export PATH=$PATH:$GOPATH/bin
+  - go get github.com/cuttle-ai/web-starter && cd $GOPATH/src/github.com/cuttle-ai/web-starter && go get ./... && go get github.com/schrej/godacov
   - go build ./...
-  - go test -coverprofile=coverage.out ./... && godacov -t $COVERAGE_TOKEN -r ./coverage.out -c $DRONE_COMMIT_SHA
+  - go test -coverprofile=coverage.out ./... && $GOPATH/bin/godacov -t $COVERAGE_TOKEN -r ./coverage.out -c $DRONE_COMMIT_SHA
