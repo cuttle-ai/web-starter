@@ -18,7 +18,7 @@ import (
 //NonGoFileRefactor does refactor non-go files
 type NonGoFileRefactor struct{}
 
-//NonGoFileRefactor is the constructor for the non go file refactor
+//NewNonGoFileRefactor is the constructor for the non go file refactor
 func NewNonGoFileRefactor() NonGoFileRefactor {
 	return NonGoFileRefactor{}
 }

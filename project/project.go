@@ -2,7 +2,7 @@
 // Use of this source code is governed by a MIT-style
 // license that can be found in the LICENSE file.
 
-//Project package has the definitions and implementations required for setting up the project.
+//Package project has the definitions and implementations required for setting up the project.
 //It copies the boilerplate code to the required destination
 package project
 
@@ -17,7 +17,7 @@ import (
  * setting up the boilerplat project
  */
 
-//Licesetype is the type of license
+//LicenseType is the type of license
 type LicenseType string
 
 const (
@@ -49,6 +49,7 @@ type License struct {
 	Organisation string
 }
 
+//Project struct lists the information about the project
 type Project struct {
 	//Name of the project
 	Name string

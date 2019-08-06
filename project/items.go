@@ -57,26 +57,28 @@ var RoutesPath = BoilerplatePath + separator + "routes"
 //ResponsePath is the path of the response package in the boilerplate code
 var ResponsePath = RoutesPath + separator + "response"
 
+//LicenseRefactors returns the license refactors to be done in every go source file
 func (p *Project) LicenseRefactors() []generate.Refactor {
 	return []generate.Refactor{
 		{
-			Name:    LICENSE_ORGANISATION,
-			Find:    CUTTLE_AI,
+			Name:    LicenseOrganisation,
+			Find:    CuttleAI,
 			Replace: p.Author.String(),
 			Source:  generate.NewCommentRefactor(),
 		},
 		{
-			Name:    LICENSE_TYPE,
-			Find:    MIT_STYLE,
+			Name:    LicenseTemplate,
+			Find:    MitStyle,
 			Replace: p.Author.String(),
 			Source:  generate.NewCommentRefactor(),
 		},
 	}
 }
 
+//BoilerplatePackageRefactors returns the package name refactor to be done in every go source file
 func (p *Project) BoilerplatePackageRefactors() generate.Refactor {
 	return generate.Refactor{
-		Name:    BOILER_PLATE_PACKAGE,
+		Name:    BoilerPlatePackage,
 		Find:    BoilerplatePackagePath,
 		Replace: p.Package,
 		Source:  generate.NewPackageRefactor(),
@@ -91,14 +93,14 @@ func (p *Project) InitSources() {
 			FileName: "main.go",
 			Refactors: append([]generate.Refactor{
 				{
-					Name:    MAIN_PROJECT_NAME,
-					Find:    PROJECT_NAME,
+					Name:    MainProjectName,
+					Find:    ProjectName,
 					Replace: p.Name,
 					Source:  generate.NewCommentRefactor(),
 				},
 				{
-					Name:    MAIN_PROJECT_DESCRIPTION,
-					Find:    PROJECT_DESCRIPTION,
+					Name:    MainProjectDescription,
+					Find:    ProjectDescription,
 					Replace: p.Description,
 					Source:  generate.NewCommentRefactor(),
 				},
@@ -106,36 +108,41 @@ func (p *Project) InitSources() {
 			}, p.LicenseRefactors()...),
 		},
 		{
+			Path:      BoilerplatePath,
+			FileName:  ".gitignore",
+			Refactors: []generate.Refactor{},
+		},
+		{
 			Path:     BoilerplatePath,
 			FileName: "README.md",
 			Refactors: []generate.Refactor{
 				{
-					Name:    README_PROJECT_NAME,
-					Find:    PROJECT_NAME,
+					Name:    ReadmeProjectName,
+					Find:    ProjectName,
 					Replace: p.Name,
 					Source:  generate.NewNonGoFileRefactor(),
 				},
 				{
-					Name:    README_PROJECT_DESCRIPTION,
-					Find:    PROJECT_DESCRIPTION,
+					Name:    ReadmeProjectDescription,
+					Find:    ProjectDescription,
 					Replace: p.Description,
 					Source:  generate.NewNonGoFileRefactor(),
 				},
 				{
-					Name:    README_PACKAGE,
-					Find:    PACKAGE,
+					Name:    ReadmePackage,
+					Find:    Package,
 					Replace: p.Package,
 					Source:  generate.NewNonGoFileRefactor(),
 				},
 				{
-					Name:    README_AUTHOR_NAME,
-					Find:    AUTHOR_NAME,
+					Name:    ReadmeAuthorName,
+					Find:    AuthorName,
 					Replace: p.Author.Name,
 					Source:  generate.NewNonGoFileRefactor(),
 				},
 				{
-					Name:    README_AUTHOR_EMAIL,
-					Find:    AUTHOR_EMAIL,
+					Name:    ReadmeAuthorEmail,
+					Find:    AuthorEmail,
 					Replace: p.Author.Email,
 					Source:  generate.NewNonGoFileRefactor(),
 				},
@@ -147,20 +154,20 @@ func (p *Project) InitSources() {
 			FileName: "LICENSE",
 			Refactors: []generate.Refactor{
 				{
-					Name:    LICENSE_PROJECT_NAME,
-					Find:    PROJECT_NAME,
+					Name:    LicenseProjectName,
+					Find:    ProjectName,
 					Replace: p.Name,
 					Source:  generate.NewNonGoFileRefactor(),
 				},
 				{
-					Name:    LICENSE_ORGANISATION,
-					Find:    ORGANISATION,
+					Name:    LicenseOrganisation,
+					Find:    Organisation,
 					Replace: p.License.Organisation,
 					Source:  generate.NewNonGoFileRefactor(),
 				},
 				{
-					Name:    LICENSE_YEAR,
-					Find:    YEAR,
+					Name:    LicenseYear,
+					Find:    Year,
 					Replace: p.License.Year,
 					Source:  generate.NewNonGoFileRefactor(),
 				},
