@@ -2,21 +2,13 @@ kind: pipeline
 name: default
 
 steps:
-- name: test
+- name: test and build
   image: golang
   commands:
   - go get github.com/cuttle-ai/web-starter && cd $GOPATH/src/github.com/cuttle-ai/web-starter && go get ./...
   - go test -coverprofile=coverage.out ./...
-
-- name: build_linux_64
-  image: golang
-  commands:
-  - cd $GOPATH/src/github.com/cuttle-ai/web-starter && GOOS=linux GOARCH=amd64 go build -o dist/web-starter
-
-- name: build_darwin_64
-  image: golang
-  commands:
-  - cd $GOPATH/src/github.com/cuttle-ai/web-starter && GOOS=darwin GOARCH=amd64 go build -o dist/web-starter.cmd
+  - GOOS=linux GOARCH=amd64 go build -o dist/web-starter
+  - GOOS=darwin GOARCH=amd64 go build -o dist/web-starter.cmd
 
 - name: codacy
   image: plugins/codacy
