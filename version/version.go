@@ -19,7 +19,7 @@ type Version struct {
 var (
 	//V1 is the version 1 of the tool
 	V1 = Version{
-		"TheBuild",
+		"Boy-Head",
 		"v1.0.0",
 		0,
 	}
