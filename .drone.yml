@@ -15,16 +15,13 @@ steps:
   settings:
     token:
       from_secret: codacy-api-token
-  commands:
-    - cd $GOPATH/src/github.com/cuttle-ai/web-starter
+    pattern: $GOPATH/src/github.com/cuttle-ai/web-starter/*.out
 
 - name: release
   image: plugins/github-release
   settings:
     api_key:
       from_secret: github-api-token
-    files: dist/*
-  commands:
-    - cd $GOPATH/src/github.com/cuttle-ai/web-starter
+    files: $GOPATH/src/github.com/cuttle-ai/web-starter/dist/*
   when:
     event: tag
