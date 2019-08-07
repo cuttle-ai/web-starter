@@ -11,12 +11,12 @@ steps:
 - name: build_linux_64
   image: golang
   commands:
-  - GOOS=linux GOARCH=amd64 go build
+  - GOOS=linux GOARCH=amd64 go build -o dist/web-starter
 
 - name: build_darwin_64
   image: golang
   commands:
-  - GOOS=darwin GOARCH=amd64 go build -o web-starter.cmd
+  - GOOS=darwin GOARCH=amd64 go build -o dist/web-starter.cmd
 
 - name: codacy
   image: plugins/codacy
@@ -29,9 +29,7 @@ steps:
   settings:
     api_key:
       from_secret: github-api-token
-    files:
-      - web-starter.cmd
-      - web-starter
+    files: dist/*
    checksum:
       - md5
       - sha1
