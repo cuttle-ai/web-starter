@@ -5,7 +5,7 @@ steps:
 - name: test
   image: golang
   commands:
-  - go get github.com/cuttle-ai/web-starter && cd $GOPATH/src/github.com/cuttle-ai/web-starter && go get ./... && go get github.com/schrej/godacov && export PAT
+  - go get github.com/cuttle-ai/web-starter && cd $GOPATH/src/github.com/cuttle-ai/web-starter && go get ./...
   - go test -coverprofile=coverage.out ./...
 
 - name: build_linux_64
