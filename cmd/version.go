@@ -14,6 +14,6 @@ var versionCmd = &cobra.Command{
 	Short: "Print the version number of web-starter",
 	Long:  `All software has versions. This is web-starter's`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Cuttle.ai web-starter", version.Default, "-- HEAD")
+		fmt.Println("Cuttle.ai web-starter", version.Default.CodeName, "-- HEAD")
 	},
 }
