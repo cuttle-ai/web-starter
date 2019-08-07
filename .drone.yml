@@ -7,8 +7,8 @@ steps:
   commands:
   - go get github.com/cuttle-ai/web-starter && cd $GOPATH/src/github.com/cuttle-ai/web-starter && go get ./...
   - go test -coverprofile=coverage.out ./... && cp coverage.out /drone/src/
-  - GOOS=linux GOARCH=amd64 go build -o /drone/src/dist/web-starter
-  - GOOS=darwin GOARCH=amd64 go build -o /drone/src/dist/web-starter.cmd
+  - GOOS=linux GOARCH=amd64 go build -o web-starter && mkdir /drone/src/dist && cp web-starter /drone/src/dist/
+  - GOOS=darwin GOARCH=amd64 go build -o web-starter.cmd && cp web-starter.cmd /drone/src/dist/
 
 - name: codacy
   image: plugins/codacy
