@@ -20,7 +20,7 @@ var (
 	//V1 is the version 1 of the tool
 	V1 = Version{
 		"Boy-Head",
-		"v1.0.0",
+		"v1.1.0",
 		0,
 	}
 )
