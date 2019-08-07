@@ -16,15 +16,17 @@ import (
  * This file contains the list of boilerplate code with required refactors
  */
 
-var separator = string([]rune{filepath.Separator})
+//Separator based on the os
+var Separator = string([]rune{filepath.Separator})
 
 //PackagePath is the package name of web starter project
-var PackagePath = "github.com" + separator + "cuttle-ai" + separator + "web-starter"
+var PackagePath = "github.com" + Separator + "cuttle-ai" + Separator + "web-starter"
 
 //BoilerplatePackagePath is the package path of the boilr plate code
-var BoilerplatePackagePath = PackagePath + separator + "boilerplate"
+var BoilerplatePackagePath = PackagePath + Separator + "boilerplate"
 
-func goPath() string {
+//GoPath is the gopath in the system
+func GoPath() string {
 	/*
 	 * We will try to get the gopath from the environment variable
 	 * If not available we will get it from the default go path
@@ -33,29 +35,29 @@ func goPath() string {
 	if len(p) == 0 {
 		p = build.Default.GOPATH
 	}
-	return p + separator + "src" + separator
+	return p + Separator + "src" + Separator
 }
 
 //LicensesPath is the location where all license templates are kept
-var LicensesPath = goPath() + PackagePath + separator + "licenses"
+var LicensesPath = GoPath() + PackagePath + Separator + "licenses"
 
 //BoilerplatePath is the absolute path to the boilerplate code
-var BoilerplatePath = goPath() + BoilerplatePackagePath
+var BoilerplatePath = GoPath() + BoilerplatePackagePath
 
 //VersionPath is the path of the version package in the boilerplate code
-var VersionPath = BoilerplatePath + separator + "version"
+var VersionPath = BoilerplatePath + Separator + "version"
 
 //ConfigPath is the path of the config package in the boilerplate code
-var ConfigPath = BoilerplatePath + separator + "config"
+var ConfigPath = BoilerplatePath + Separator + "config"
 
 //LogPath is the path of the log package in the boilerplate code
-var LogPath = BoilerplatePath + separator + "log"
+var LogPath = BoilerplatePath + Separator + "log"
 
 //RoutesPath is the path of the routes package in the boilerplate code
-var RoutesPath = BoilerplatePath + separator + "routes"
+var RoutesPath = BoilerplatePath + Separator + "routes"
 
 //ResponsePath is the path of the response package in the boilerplate code
-var ResponsePath = RoutesPath + separator + "response"
+var ResponsePath = RoutesPath + Separator + "response"
 
 //LicenseRefactors returns the license refactors to be done in every go source file
 func (p *Project) LicenseRefactors() []generate.Refactor {
@@ -150,7 +152,7 @@ func (p *Project) InitSources() {
 		},
 
 		{
-			Path:     LicensesPath + separator + string(p.License.Type),
+			Path:     LicensesPath + Separator + string(p.License.Type),
 			FileName: "LICENSE",
 			Refactors: []generate.Refactor{
 				{
@@ -218,7 +220,7 @@ func (p *Project) InitSources() {
 		{
 			Path:                ResponsePath,
 			FileName:            "response.go",
-			RelativeDestination: "routes" + separator + "response",
+			RelativeDestination: "routes" + Separator + "response",
 			Refactors: []generate.Refactor{
 				p.BoilerplatePackageRefactors(),
 			},

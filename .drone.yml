@@ -2,15 +2,40 @@ kind: pipeline
 name: default
 
 steps:
-- name: build and test
+- name: test
   image: golang
   commands:
   - go get github.com/cuttle-ai/web-starter && cd $GOPATH/src/github.com/cuttle-ai/web-starter && go get ./... && go get github.com/schrej/godacov && export PAT
-  - go build ./...
   - go test -coverprofile=coverage.out ./...
+
+- name: build_linux_64
+  image: golang
+  commands:
+  - GOOS=linux GOARCH=amd64 go build
+
+- name: build_darwin_64
+  image: golang
+  commands:
+  - GOOS=darwin GOARCH=amd64 go build -o web-starter.cmd
 
 - name: codacy
   image: plugins/codacy
   settings:
     token:
       from_secret: codacy-api-token
+
+- name: release
+  image: plugins/github-release
+  settings:
+    api_key:
+      from_secret: github-api-token
+    files:
+      - web-starter.cmd
+      - web-starter
+   checksum:
+      - md5
+      - sha1
+      - sha256
+      - sha512
+      - adler32
+      - crc32

@@ -24,3 +24,6 @@ var (
 		0,
 	}
 )
+
+//Default is the default version of the tool
+var Default = V1
