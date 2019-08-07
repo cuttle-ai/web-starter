@@ -6,22 +6,21 @@ steps:
   image: golang
   commands:
   - go get github.com/cuttle-ai/web-starter && cd $GOPATH/src/github.com/cuttle-ai/web-starter && go get ./...
-  - go test -coverprofile=coverage.out ./...
-  - GOOS=linux GOARCH=amd64 go build -o dist/web-starter
-  - GOOS=darwin GOARCH=amd64 go build -o dist/web-starter.cmd
+  - go test -coverprofile=/drone/coverage.out ./...
+  - GOOS=linux GOARCH=amd64 go build -o /drone/dist/web-starter
+  - GOOS=darwin GOARCH=amd64 go build -o /drone/dist/web-starter.cmd
 
 - name: codacy
   image: plugins/codacy
   settings:
     token:
       from_secret: codacy-api-token
-    pattern: $GOPATH/src/github.com/cuttle-ai/web-starter/*.out
 
 - name: release
   image: plugins/github-release
   settings:
     api_key:
       from_secret: github-api-token
-    files: $GOPATH/src/github.com/cuttle-ai/web-starter/dist/*
+    files: dist/*
   when:
     event: tag
