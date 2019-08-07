@@ -30,10 +30,5 @@ steps:
     api_key:
       from_secret: github-api-token
     files: dist/*
-   checksum:
-      - md5
-      - sha1
-      - sha256
-      - sha512
-      - adler32
-      - crc32
+  when:
+    event: tag
