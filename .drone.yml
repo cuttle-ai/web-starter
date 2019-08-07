@@ -11,12 +11,12 @@ steps:
 - name: build_linux_64
   image: golang
   commands:
-  - GOOS=linux GOARCH=amd64 go build -o dist/web-starter
+  - cd $GOPATH/src/github.com/cuttle-ai/web-starter && GOOS=linux GOARCH=amd64 go build -o dist/web-starter
 
 - name: build_darwin_64
   image: golang
   commands:
-  - GOOS=darwin GOARCH=amd64 go build -o dist/web-starter.cmd
+  - cd $GOPATH/src/github.com/cuttle-ai/web-starter && GOOS=darwin GOARCH=amd64 go build -o dist/web-starter.cmd
 
 - name: codacy
   image: plugins/codacy
