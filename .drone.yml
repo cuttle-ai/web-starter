@@ -6,7 +6,7 @@ steps:
   image: golang
   commands:
   - go get github.com/cuttle-ai/web-starter && cd $GOPATH/src/github.com/cuttle-ai/web-starter && go get ./...
-  - go test -coverprofile=/drone/src/dist/coverage.out ./...
+  - go test -coverprofile=coverage.out ./... && cp coverage.out /drone/src/
   - GOOS=linux GOARCH=amd64 go build -o /drone/src/dist/web-starter
   - GOOS=darwin GOARCH=amd64 go build -o /drone/src/dist/web-starter.cmd
 
