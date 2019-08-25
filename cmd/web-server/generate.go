@@ -28,6 +28,7 @@ var generateCmd = &cobra.Command{
 		 * We will initiate the input
 		 * Then we will the user for project details
 		 * Then will generate the project
+		 * Then init the go mod
 		 * Then we will install it
 		 */
 		//initializing the UI
@@ -53,12 +54,28 @@ var generateCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
+		//if the path isn't in the go path, then add go modules to it
+		if strings.Index(pr.Destination, project.GoPath()) < 0 {
+			c := exec.Command("go", "mod", "init", pr.Package)
+			c.Dir = pr.Destination
+			c.Stderr = os.Stderr
+			fmt.Println("Initializing go modules since the project isn't in GOPATH", pr.Package)
+			err = c.Run()
+			if err != nil {
+				//Error while installing the project
+				fmt.Println("Project is generated. But couldn't add go modules to it", err)
+				os.Exit(1)
+			}
+		}
+
 		//installing the project
 		c := exec.Command("go", "install", pr.Package)
+		c.Dir = pr.Destination
+		c.Stderr = os.Stderr
 		fmt.Println("Installing", pr.Name)
 		err = c.Run()
 		if err != nil {
-			//Error while genertaing the project
+			//Error while installing the project
 			fmt.Println("Project is generated. But couldn't install it", err)
 			os.Exit(1)
 		}
@@ -100,6 +117,14 @@ func prompts(ui *input.UI) (*project.Project, error) {
 	})
 	if err != nil {
 		return nil, err
+	}
+	//if destination is not absolute, then add absolute path to it
+	if strings.Index(dst, project.Separator) != 0 {
+		dir, err := os.Getwd()
+		if err != nil {
+			return nil, err
+		}
+		dst = dir + project.Separator + dst
 	}
 	pkgName, err := ui.Ask("Package name", &input.Options{
 		Default:  "github.com/" + strings.Split(author.Email, "@")[0] + "/web-server",
