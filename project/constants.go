@@ -54,4 +54,6 @@ const (
 	LicenseYear = "LICENSE year"
 	//LicenseProjectName is the refactor for project name in the license file
 	LicenseProjectName = "LICENSE project name"
+	//VersionProjectName is the refactor name for the project name in version.go file
+	VersionProjectName = "Version project name"
 )

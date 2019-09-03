@@ -179,11 +179,32 @@ func (p *Project) InitSources() {
 			Path:                VersionPath,
 			FileName:            "version.go",
 			RelativeDestination: "version",
-			Refactors:           []generate.Refactor{},
+			Refactors: []generate.Refactor{
+				{
+					Name:    VersionProjectName,
+					Find:    ProjectName,
+					Replace: p.Name,
+					Source:  generate.NewNonGoFileRefactor(),
+				},
+			},
 		},
 		{
 			Path:                ConfigPath,
 			FileName:            "config.go",
+			RelativeDestination: "config",
+			Refactors: []generate.Refactor{
+				p.BoilerplatePackageRefactors(),
+			},
+		},
+		{
+			Path:                ConfigPath,
+			FileName:            "context.go",
+			RelativeDestination: "config",
+			Refactors:           []generate.Refactor{},
+		},
+		{
+			Path:                ConfigPath,
+			FileName:            "logger.go",
 			RelativeDestination: "config",
 			Refactors:           []generate.Refactor{},
 		},
@@ -196,6 +217,12 @@ func (p *Project) InitSources() {
 			},
 		},
 		{
+			Path:                LogPath,
+			FileName:            "logger.go",
+			RelativeDestination: "log",
+			Refactors:           []generate.Refactor{},
+		},
+		{
 			Path:                RoutesPath,
 			FileName:            "routes.go",
 			RelativeDestination: "routes",
@@ -204,6 +231,14 @@ func (p *Project) InitSources() {
 		{
 			Path:                RoutesPath,
 			FileName:            "route.go",
+			RelativeDestination: "routes",
+			Refactors: []generate.Refactor{
+				p.BoilerplatePackageRefactors(),
+			},
+		},
+		{
+			Path:                RoutesPath,
+			FileName:            "ratelimiter.go",
 			RelativeDestination: "routes",
 			Refactors: []generate.Refactor{
 				p.BoilerplatePackageRefactors(),

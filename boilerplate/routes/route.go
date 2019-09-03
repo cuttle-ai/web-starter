@@ -33,6 +33,9 @@ type Route struct {
 	HandlerFunc HandlerFunc
 }
 
+//AppContextKey is the key with which the application is saved in the request context
+const AppContextKey = "app-context"
+
 //Register registers the route with the default http handler func
 func (r Route) Register(s *http.ServeMux) {
 	/*
@@ -50,19 +53,56 @@ func (r Route) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	/*
 	 * Will get the context
 	 * Will parse the form
+	 * We will fetch the app context for the request
+	 * If app contexts have exhausted, we will reject the request
+	 * Then we will set the app context in request
 	 * Execute request handler func
+	 * After execution return the app context
 	 */
+	//getting the context
 	ctx := req.Context()
+
+	//parsing the form
 	err := req.ParseForm()
 	if err != nil {
 		//error while parsing the form
 		log.Error("Error while parsing the request form", err)
-		response.WriteError(res, response.Error{Err: "Couldn't parse the request form"})
+		response.WriteError(res, response.Error{Err: "Couldn't parse the request form"}, http.StatusUnprocessableEntity)
 		_, cancel := context.WithCancel(ctx)
 		cancel()
 		return
 	}
-	r.Exec(ctx, res, req)
+
+	//fetching the app context
+	appCtxReq := AppContextRequest{
+		Type: Get,
+		Out:  make(chan AppContextRequest),
+	}
+	go SendRequest(AppContextRequestChan, appCtxReq)
+	resCtx := <-appCtxReq.Out
+
+	//checking whether the app context exhausted or not
+	if resCtx.Exhausted {
+		//reject the request
+		log.Error("We have exhausted the request limits")
+		response.WriteError(res, response.Error{Err: "We have exhuasted the server request limits. Please try after some time."}, http.StatusTooManyRequests)
+		_, cancel := context.WithCancel(ctx)
+		cancel()
+		return
+	}
+
+	//setting the app context
+	newCtx := context.WithValue(ctx, AppContextKey, resCtx.AppContext)
+
+	//executing the request
+	r.Exec(newCtx, res, req)
+
+	//returning the app context
+	appCtxReq = AppContextRequest{
+		Type:       Finished,
+		AppContext: resCtx.AppContext,
+	}
+	go SendRequest(AppContextRequestChan, appCtxReq)
 }
 
 //Exec will execute the handler func. By default it will set response content type as as json.

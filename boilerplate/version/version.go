@@ -14,3 +14,8 @@ const (
 	//Default stores the current version of the application
 	Default = V1
 )
+
+const (
+	//AppName is the name of the application
+	AppName = "{{.Name}}"
+)

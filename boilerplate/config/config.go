@@ -6,9 +6,14 @@
 package config
 
 import (
+	"log"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/cuttle-ai/web-starter/boilerplate/version"
+
+	"github.com/cuttle-ai/configs/config"
 )
 
 var (
@@ -20,7 +25,50 @@ var (
 	RequestRTimeout = time.Duration(20 * time.Millisecond)
 	//ResponseWTimeout of the api response write timeout in milliseconds
 	ResponseWTimeout = time.Duration(20 * time.Millisecond)
+	//MaxRequests is the maximum no. of requests catered at a given point of time
+	MaxRequests = 2
+	//RequestCleanUpCheck is the time after which request cleanup check has to happen
+	RequestCleanUpCheck = time.Duration(2 * time.Minute)
+	//CleanUpCheckBatchSize is the no. of clean up checks to be done
 )
+
+//SkipVault will skip the vault initialization if set true
+var SkipVault bool
+
+func init() {
+	sk := os.Getenv("SKIP_VAULT")
+	if sk == "true" {
+		SkipVault = true
+	}
+}
+
+func init() {
+	/*
+	 * We will load the config from secrets management service
+	 * Then we will set them as environment variables
+	 */
+	//getting the configuration
+	log.Println("Getting the config values from vault")
+	if SkipVault {
+		return
+	}
+	v, err := config.NewVault()
+	checkError(err)
+	config, err := v.GetConfig(version.AppName)
+	checkError(err)
+
+	//setting the configs as environment variables
+	for k, v := range config {
+		log.Println("Setting the secret from vault", k)
+		os.Setenv(k, v)
+	}
+}
+
+func checkError(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 func init() {
 	/*
@@ -28,6 +76,8 @@ func init() {
 	 * We will init the request timeout
 	 * We will init the request body read timeout
 	 * We will init the request body write timeout
+	 * We will init the max no. of requests
+	 * We will init the request cleanup check
 	 */
 	//port
 	if len(os.Getenv("PORT")) != 0 {
@@ -56,6 +106,22 @@ func init() {
 		//if successful convert timeout
 		if t, err := strconv.ParseInt(os.Getenv("RESPOSE_WRITE_TIMEOUT"), 10, 64); err == nil {
 			ResponseWTimeout = time.Duration(t * int64(time.Millisecond))
+		}
+	}
+
+	//max no. of requests
+	if len(os.Getenv("MAX_REQUESTS")) != 0 {
+		//if successful convert timeout
+		if r, err := strconv.Atoi(os.Getenv("MAX_REQUESTS")); err == nil {
+			MaxRequests = r
+		}
+	}
+
+	//request cleanup check
+	if len(os.Getenv("REQUEST_CLEAN_UP_CHECK")) != 0 {
+		//if successful convert timeout
+		if t, err := strconv.ParseInt(os.Getenv("REQUEST_CLEAN_UP_CHECK"), 10, 64); err == nil {
+			RequestCleanUpCheck = time.Duration(t * int64(time.Minute))
 		}
 	}
 }

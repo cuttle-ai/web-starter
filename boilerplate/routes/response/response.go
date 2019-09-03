@@ -23,10 +23,11 @@ type Error struct {
 }
 
 //WriteError will write to the error response to the response writer
-func WriteError(res http.ResponseWriter, err Error) {
+func WriteError(res http.ResponseWriter, err Error, code int) {
 	/*
 	 * Will use json encoder to write response
 	 */
+	res.WriteHeader(code)
 	en := json.NewEncoder(res)
 	er := en.Encode(err)
 	if er != nil {
