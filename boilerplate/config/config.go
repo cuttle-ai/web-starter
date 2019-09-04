@@ -8,7 +8,9 @@ package config
 import (
 	"log"
 	"os"
+	"regexp"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/cuttle-ai/web-starter/boilerplate/version"
@@ -35,10 +37,22 @@ var (
 //SkipVault will skip the vault initialization if set true
 var SkipVault bool
 
+//IsTest indicates that the current runtime is for test
+var IsTest bool
+
 func init() {
+	/*
+	 * Based on the env variables will set the
+	 *	* SkipVault
+	 *  * IsTest
+	 */
 	sk := os.Getenv("SKIP_VAULT")
 	if sk == "true" {
 		SkipVault = true
+	}
+	iT := os.Getenv("IS_TEST")
+	if iT == "true" {
+		IsTest = true
 	}
 }
 
@@ -54,7 +68,15 @@ func init() {
 	}
 	v, err := config.NewVault()
 	checkError(err)
-	config, err := v.GetConfig(version.AppName)
+	reg, err := regexp.Compile("[^A-Za-z0-9]+")
+	if err != nil {
+		log.Fatal(err)
+	}
+	configName := strings.ToLower(reg.ReplaceAllString(version.AppName, "-"))
+	if IsTest {
+		configName += "-test"
+	}
+	config, err := v.GetConfig(configName)
 	checkError(err)
 
 	//setting the configs as environment variables
