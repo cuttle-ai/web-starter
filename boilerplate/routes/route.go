@@ -31,6 +31,8 @@ type Route struct {
 	Pattern string
 	//HandlerFunc is the handler func of the route
 	HandlerFunc HandlerFunc
+	//ParseForm will do a form parse before invoking the handler
+	ParseForm bool
 }
 
 //AppContextKey is the key with which the application is saved in the request context
@@ -63,14 +65,16 @@ func (r Route) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
 
 	//parsing the form
-	err := req.ParseForm()
-	if err != nil {
-		//error while parsing the form
-		log.Error("Error while parsing the request form", err)
-		response.WriteError(res, response.Error{Err: "Couldn't parse the request form"}, http.StatusUnprocessableEntity)
-		_, cancel := context.WithCancel(ctx)
-		cancel()
-		return
+	if r.ParseForm {
+		err := req.ParseForm()
+		if err != nil {
+			//error while parsing the form
+			log.Error("Error while parsing the request form", err)
+			response.WriteError(res, response.Error{Err: "Couldn't parse the request form"}, http.StatusUnprocessableEntity)
+			_, cancel := context.WithCancel(ctx)
+			cancel()
+			return
+		}
 	}
 
 	//fetching the app context
