@@ -25,7 +25,7 @@ const (
 	Get RequestType = 0
 	//Finished is to return an app context
 	Finished RequestType = 1
-	//Cleanup is to clean up the non-returned app context
+	//CleanUp is to clean up the non-returned app context
 	CleanUp RequestType = 2
 )
 
@@ -41,6 +41,7 @@ type AppContextRequest struct {
 	Exhausted bool
 }
 
+//AppContextRequestChan channel through which the app context routine takes requests from
 var AppContextRequestChan = make(chan AppContextRequest)
 
 //SendRequest is to send request to the channel. When this function used as go routines
