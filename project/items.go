@@ -87,107 +87,8 @@ func (p *Project) BoilerplatePackageRefactors() generate.Refactor {
 	}
 }
 
-//InitSources will init the sources of the project
-func (p *Project) InitSources() {
-	p.Sources = []generate.Source{
-		{
-			Path:     BoilerplatePath,
-			FileName: "main.go",
-			Refactors: append([]generate.Refactor{
-				{
-					Name:    MainProjectName,
-					Find:    ProjectName,
-					Replace: p.Name,
-					Source:  generate.NewCommentRefactor(),
-				},
-				{
-					Name:    MainProjectDescription,
-					Find:    ProjectDescription,
-					Replace: p.Description,
-					Source:  generate.NewCommentRefactor(),
-				},
-				p.BoilerplatePackageRefactors(),
-			}, p.LicenseRefactors()...),
-		},
-		{
-			Path:      BoilerplatePath,
-			FileName:  ".gitignore",
-			Refactors: []generate.Refactor{},
-		},
-		{
-			Path:     BoilerplatePath,
-			FileName: "README.md",
-			Refactors: []generate.Refactor{
-				{
-					Name:    ReadmeProjectName,
-					Find:    ProjectName,
-					Replace: p.Name,
-					Source:  generate.NewNonGoFileRefactor(),
-				},
-				{
-					Name:    ReadmeProjectDescription,
-					Find:    ProjectDescription,
-					Replace: p.Description,
-					Source:  generate.NewNonGoFileRefactor(),
-				},
-				{
-					Name:    ReadmePackage,
-					Find:    Package,
-					Replace: p.Package,
-					Source:  generate.NewNonGoFileRefactor(),
-				},
-				{
-					Name:    ReadmeAuthorName,
-					Find:    AuthorName,
-					Replace: p.Author.Name,
-					Source:  generate.NewNonGoFileRefactor(),
-				},
-				{
-					Name:    ReadmeAuthorEmail,
-					Find:    AuthorEmail,
-					Replace: p.Author.Email,
-					Source:  generate.NewNonGoFileRefactor(),
-				},
-			},
-		},
-
-		{
-			Path:     LicensesPath + Separator + string(p.License.Type),
-			FileName: "LICENSE",
-			Refactors: []generate.Refactor{
-				{
-					Name:    LicenseProjectName,
-					Find:    ProjectName,
-					Replace: p.Name,
-					Source:  generate.NewNonGoFileRefactor(),
-				},
-				{
-					Name:    LicenseOrganisation,
-					Find:    Organisation,
-					Replace: p.License.Organisation,
-					Source:  generate.NewNonGoFileRefactor(),
-				},
-				{
-					Name:    LicenseYear,
-					Find:    Year,
-					Replace: p.License.Year,
-					Source:  generate.NewNonGoFileRefactor(),
-				},
-			},
-		},
-		{
-			Path:                VersionPath,
-			FileName:            "version.go",
-			RelativeDestination: "version",
-			Refactors: []generate.Refactor{
-				{
-					Name:    VersionProjectName,
-					Find:    ProjectName,
-					Replace: p.Name,
-					Source:  generate.NewNonGoFileRefactor(),
-				},
-			},
-		},
+func (p *Project) configSources() []generate.Source {
+	return []generate.Source{
 		{
 			Path:                ConfigPath,
 			FileName:            "config.go",
@@ -208,6 +109,11 @@ func (p *Project) InitSources() {
 			RelativeDestination: "config",
 			Refactors:           []generate.Refactor{},
 		},
+	}
+}
+
+func (p *Project) logSources() []generate.Source {
+	return []generate.Source{
 		{
 			Path:                LogPath,
 			FileName:            "log.go",
@@ -222,6 +128,11 @@ func (p *Project) InitSources() {
 			RelativeDestination: "log",
 			Refactors:           []generate.Refactor{},
 		},
+	}
+}
+
+func (p *Project) routeSources() []generate.Source {
+	return []generate.Source{
 		{
 			Path:                RoutesPath,
 			FileName:            "routes.go",
@@ -261,4 +172,139 @@ func (p *Project) InitSources() {
 			},
 		},
 	}
+}
+
+func (p *Project) mainSources() []generate.Source {
+	return []generate.Source{
+		{
+			Path:     BoilerplatePath,
+			FileName: "main.go",
+			Refactors: append([]generate.Refactor{
+				{
+					Name:    MainProjectName,
+					Find:    ProjectName,
+					Replace: p.Name,
+					Source:  generate.NewCommentRefactor(),
+				},
+				{
+					Name:    MainProjectDescription,
+					Find:    ProjectDescription,
+					Replace: p.Description,
+					Source:  generate.NewCommentRefactor(),
+				},
+				p.BoilerplatePackageRefactors(),
+			}, p.LicenseRefactors()...),
+		},
+	}
+}
+
+func (p *Project) gitSources() []generate.Source {
+	return []generate.Source{
+		{
+			Path:      BoilerplatePath,
+			FileName:  ".gitignore",
+			Refactors: []generate.Refactor{},
+		},
+	}
+}
+
+func (p *Project) readmeSources() []generate.Source {
+	return []generate.Source{
+		{
+			Path:     BoilerplatePath,
+			FileName: "README.md",
+			Refactors: []generate.Refactor{
+				{
+					Name:    ReadmeProjectName,
+					Find:    ProjectName,
+					Replace: p.Name,
+					Source:  generate.NewNonGoFileRefactor(),
+				},
+				{
+					Name:    ReadmeProjectDescription,
+					Find:    ProjectDescription,
+					Replace: p.Description,
+					Source:  generate.NewNonGoFileRefactor(),
+				},
+				{
+					Name:    ReadmePackage,
+					Find:    Package,
+					Replace: p.Package,
+					Source:  generate.NewNonGoFileRefactor(),
+				},
+				{
+					Name:    ReadmeAuthorName,
+					Find:    AuthorName,
+					Replace: p.Author.Name,
+					Source:  generate.NewNonGoFileRefactor(),
+				},
+				{
+					Name:    ReadmeAuthorEmail,
+					Find:    AuthorEmail,
+					Replace: p.Author.Email,
+					Source:  generate.NewNonGoFileRefactor(),
+				},
+			},
+		},
+	}
+}
+
+func (p *Project) licenseSources() []generate.Source {
+	return []generate.Source{
+		{
+			Path:     LicensesPath + Separator + string(p.License.Type),
+			FileName: "LICENSE",
+			Refactors: []generate.Refactor{
+				{
+					Name:    LicenseProjectName,
+					Find:    ProjectName,
+					Replace: p.Name,
+					Source:  generate.NewNonGoFileRefactor(),
+				},
+				{
+					Name:    LicenseOrganisation,
+					Find:    Organisation,
+					Replace: p.License.Organisation,
+					Source:  generate.NewNonGoFileRefactor(),
+				},
+				{
+					Name:    LicenseYear,
+					Find:    Year,
+					Replace: p.License.Year,
+					Source:  generate.NewNonGoFileRefactor(),
+				},
+			},
+		},
+	}
+}
+
+func (p *Project) versionSources() []generate.Source {
+	return []generate.Source{
+		{
+			Path:                VersionPath,
+			FileName:            "version.go",
+			RelativeDestination: "version",
+			Refactors: []generate.Refactor{
+				{
+					Name:    VersionProjectName,
+					Find:    ProjectName,
+					Replace: p.Name,
+					Source:  generate.NewNonGoFileRefactor(),
+				},
+			},
+		},
+	}
+}
+
+//InitSources will init the sources of the project
+func (p *Project) InitSources() {
+	p.Sources = []generate.Source{}
+	p.Sources = append(p.Sources, p.mainSources()...)
+	p.Sources = append(p.Sources, p.gitSources()...)
+	p.Sources = append(p.Sources, p.readmeSources()...)
+	p.Sources = append(p.Sources, p.licenseSources()...)
+	p.Sources = append(p.Sources, p.versionSources()...)
+	p.Sources = append(p.Sources, p.configSources()...)
+	p.Sources = append(p.Sources, p.logSources()...)
+	p.Sources = append(p.Sources, p.routeSources()...)
 }
