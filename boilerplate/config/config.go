@@ -31,7 +31,6 @@ var (
 	MaxRequests = 1000
 	//RequestCleanUpCheck is the time after which request cleanup check has to happen
 	RequestCleanUpCheck = time.Duration(2 * time.Minute)
-	//CleanUpCheckBatchSize is the no. of clean up checks to be done
 )
 
 //SkipVault will skip the vault initialization if set true
